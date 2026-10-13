@@ -79,6 +79,8 @@ jobs:
       image-name: 'my-app:latest'
 
 
+
+
 ### Option B: Run Modular Workflows Individually
 
 If you only need specific security gates (e.g., only infrastructure auditing), call only the workflow you require:
@@ -94,7 +96,8 @@ jobs:
     uses: gabbytech01/devsecops-security-pipeline/.github/workflows/iac_scan.yml@main
 
 
-### 📊 Pipeline Architecture
+
+📊 Pipeline Architecture
 
 graph TD
     A[Code Push / Pull Request] --> B[Target Repository]
