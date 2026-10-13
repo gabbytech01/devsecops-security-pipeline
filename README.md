@@ -82,7 +82,6 @@ To implement these security gates in your own projects, create a workflow file i
 | **`container_scan.yml`** | `image-name` *(Required)* | Scans built Docker images (e.g., `'my-app:latest'`). |
 
 ```yaml
----
 
 name: DevSecOps Gate Check
 
@@ -121,9 +120,3 @@ on:
 jobs:
   iac-check:
     uses: gabbytech01/devsecops-security-pipeline/.github/workflows/iac_scan.yml@main
-
----
-
-### 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
