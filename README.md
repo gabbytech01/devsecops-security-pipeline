@@ -1,32 +1,27 @@
-# devsecops-security-pipeline engine
+# devSecOps-Security-pipeline Engine
 
 > **A modular, plug-and-play GitHub Actions DevSecOps suite providing automated Secret Scanning, SAST, SCA, Container Vulnerability Analysis, and IaC Security Auditing.**
 
-`devsecops-security-pipeline` is a centralized security automation suite designed to shift security left across the entire Software Development Life Cycle (SDLC). 
-
-Built using GitHub Actions **Reusable Workflows** (`workflow_call`), this repository allows developers and security teams to call pre-configured, battle-tested security scanners directly into their own repositories with minimal configuration.
+`devsecops-security-pipeline` is a centralized security automation suite designed to shift security left across the entire Software Development Life Cycle (SDLC). Built using GitHub Actions **Reusable Workflows** (`workflow_call`), this repository allows developers and security teams to call pre-configured, battle-tested security scanners directly into their own repositories with minimal configuration.
 
 ---
 
-## 📁 Repository Structure
+## 📁 Repository Overview
 
-```text
-devsecops-security-pipeline/
-├── .github/
-│   └── workflows/
-│       ├── security_audit.yml   # Core SAST, Secret, SCA, & Shell Audit
-│       ├── container_scan.yml   # Docker Container Image Vulnerability Scanner
-│       └── iac_scan.yml         # Terraform, CloudFormation, & K8s Security Scan
-├── LICENSE                      # MIT Open Source License
-└── README.md                    # Engine Documentation
+| Directory / File | Description |
+| :--- | :--- |
+| **`.github/workflows/security_audit.yml`** | Core pipeline for Secrets, Code Vulnerabilities, Dependencies, and Shell Scripts. |
+| **`.github/workflows/container_scan.yml`** | Container security pipeline for scanning Docker images and OS layers. |
+| **`.github/workflows/iac_scan.yml`** | Infrastructure as Code security engine for cloud configurations. |
+| **`LICENSE`** | MIT Open Source License. |
+| **`README.md`** | Complete documentation and integration guides. |
 
-
-
+---
 
 ## 🚀 Available Workflows & Security Engines
 
 ### 1. Core Security Audit (`security_audit.yml`)
-> Scans application code, embedded credentials, third-party packages, and scripts.
+> *Scans application code, embedded credentials, third-party packages, and scripts.*
 
 | Security Gate | Tool Used | Target / Function |
 | :--- | :--- | :--- |
@@ -51,7 +46,7 @@ devsecops-security-pipeline/
 To implement these security gates in your own projects, create a workflow file in your target repository at `.github/workflows/security_gate.yml`.
 
 ### Option A: Run the Full Security Suite (Recommended)
-> Call all three scanning pipelines in parallel:
+> *Call all three scanning pipelines in parallel:*
 
 | Workflow Reference | Parameter / Requirement | Description |
 | :--- | :--- | :--- |
@@ -84,12 +79,24 @@ jobs:
       image-name: 'my-app:latest'
 
 
-  # Run ONLY Infrastructure Security Audit
-  iac-only-check:
+### Option B: Run Modular Workflows Individually
+
+If you only need specific security gates (e.g., only infrastructure auditing), call only the workflow you require:
+
+name: IaC Security Only
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  iac-check:
     uses: gabbytech01/devsecops-security-pipeline/.github/workflows/iac_scan.yml@main
 
 
-📊 Pipeline ArchitectureCode snippetgraph TD
+### 📊 Pipeline Architecture
+
+graph TD
     A[Code Push / Pull Request] --> B[Target Repository]
     B --> C{DevSecOps Security Gate}
     
@@ -112,19 +119,7 @@ jobs:
     J -->|Fail| L[Block Pipeline & Alert Developer]
 
 
-📄 LicenseThis project is licensed under the MIT License - see the LICENSE file for details.
----
 
-### Step-by-Step Terminal Push Commands
+### 📄 License
 
-Run these commands in your Parrot OS terminal to apply the license, update the README, and push everything to GitHub:
-
-```bash
-# Stage all added workflows, LICENSE, and updated README
-git add .github/workflows/ LICENSE README.md
-
-# Commit changes
-git commit -m "feat: add container and iac scanning workflows, add MIT license and updated docs"
-
-# Push to your repository
-git push origin main
+This project is licensed under the MIT License - see the LICENSE file for details.
