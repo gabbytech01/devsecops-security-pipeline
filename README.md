@@ -95,7 +95,7 @@ jobs:
   iac-check:
     uses: gabbytech01/devsecops-security-pipeline/.github/workflows/iac_scan.yml@main
 
-
+---
 
 ## 📊 Pipeline Architecture
 
