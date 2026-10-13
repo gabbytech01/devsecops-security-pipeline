@@ -22,8 +22,49 @@ devsecops-security-pipeline/
 
 
 
+### 🚀 Available Workflows & Security Engines
 
-🚀 Available Workflows & Security Engines1. Core Security Audit (security_audit.yml)Scans application code, embedded credentials, third-party packages, and scripts.Security GateTool UsedTarget / Function🔑 Secret ScanningTruffleHogDetects exposed API keys, private SSH keys, and cloud credentials in git history.🔍 SASTSemgrepScans application code for OWASP Top 10 vulnerabilities (SQLi, XSS, etc.).📦 SCATrivyAudits dependencies and libraries for published CVE vulnerabilities.🐚 Shell AuditShellCheckAudits Bash/Shell scripts for syntax flaws and bad practices.2. Container Security Scan (container_scan.yml)Analyzes Docker container images and underlying OS layers for high and critical severity CVEs using Trivy.3. Infrastructure as Code Scan (iac_scan.yml)Scans cloud infrastructure code (Terraform, AWS CloudFormation, Kubernetes manifests, Dockerfiles) for misconfigurations and compliance violations using Checkov.🛠️ Integration Guide (How to Use)To implement these security gates in your own projects, create a workflow file in your target repository at .github/workflows/security_gate.yml.Option A: Run the Full Security Suite (Recommended)Call all three scanning pipelines in parallel:YAMLname: DevSecOps Gate Check
+#### 1. Core Security Audit (`security_audit.yml`)
+
+> *Scans application code, embedded credentials, third-party packages, and scripts.*
+
+| Security Gate | Tool Used | Target / Function |
+| --- | --- | --- |
+| **🔑 Secret Scanning** | [TruffleHog](https://github.com/trufflesecurity/trufflehog) | Detects exposed API keys, private SSH keys, and cloud credentials in git history. |
+| **🔍 SAST** | [Semgrep](https://semgrep.dev/) | Scans application code for OWASP Top 10 vulnerabilities (SQLi, XSS, etc.). |
+| **📦 SCA** | [Trivy](https://github.com/aquasecurity/trivy) | Audits dependencies and libraries for published CVE vulnerabilities. |
+| **🐚 Shell Audit** | [ShellCheck](https://www.shellcheck.net/) | Audits Bash/Shell scripts for syntax flaws and bad practices. |
+
+---
+
+#### 2. Specialized Scanning Workflows
+
+| Workflow File | Security Gate | Tool Used | Target / Function |
+| --- | --- | --- | --- |
+| **`container_scan.yml`** | **🐳 Container Security** | [Trivy](https://github.com/aquasecurity/trivy) | Analyzes Docker container images and underlying OS layers for High and Critical severity CVEs. |
+| **`iac_scan.yml`** | **☁️ IaC Security** | [Checkov](https://github.com/bridgecrewio/checkov) | Scans cloud infrastructure code (Terraform, AWS CloudFormation, Kubernetes manifests, Dockerfiles) for misconfigurations and compliance violations. |
+
+---
+
+### 🛠️ Integration Guide (How to Use)
+
+To implement these security gates in your own projects, create a workflow file in your target repository at `.github/workflows/security_gate.yml`.
+
+#### Option A: Run the Full Security Suite (Recommended)
+
+> *Call all three scanning pipelines in parallel:*
+
+| Workflow Reference | Parameter / Requirement | Description |
+| --- | --- | --- |
+| **`security_audit.yml`** | None | Scans source code, secrets, dependencies, and shell scripts. |
+| **`iac_scan.yml`** | None | Scans Terraform, Kubernetes, Dockerfiles, and CloudFormation. |
+| **`container_scan.yml`** | `image-name` (Required) | Scans built Docker images (e.g., `'my-app:latest'`). |
+
+```yaml
+name: DevSecOps Gate Check
+
+
+```
 
 on:
   push:
@@ -46,6 +87,7 @@ jobs:
     with:
       image-name: 'my-app:latest'
 Option B: Run Modular Workflows IndividuallyIf you only need specific security gates (e.g., only secret scanning or IaC auditing), call only the workflow you require:YAMLjobs:
+
   # Run ONLY Infrastructure Security Audit
   iac-only-check:
     uses: gabbytech01/devsecops-security-pipeline/.github/workflows/iac_scan.yml@main
