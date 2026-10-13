@@ -97,7 +97,7 @@ jobs:
 
 
 
-📊 Pipeline Architecture
+## 📊 Pipeline Architecture
 
 graph TD
     A[Code Push / Pull Request] --> B[Target Repository]
