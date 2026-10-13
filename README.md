@@ -94,35 +94,3 @@ on:
 jobs:
   iac-check:
     uses: gabbytech01/devsecops-security-pipeline/.github/workflows/iac_scan.yml@main
-
----
-
-## 📊 Pipeline Architecture
-
-graph TD
-    A[Code Push / Pull Request] --> B[Target Repository]
-    B --> C{DevSecOps Security Gate}
-    
-    C -->|security_audit.yml| D[Secret Scan: TruffleHog]
-    C -->|security_audit.yml| E[SAST: Semgrep]
-    C -->|security_audit.yml| F[SCA: Trivy FS]
-    C -->|security_audit.yml| G[Shell Audit: ShellCheck]
-    
-    C -->|iac_scan.yml| H[IaC Misconfig: Checkov]
-    C -->|container_scan.yml| I[Container CVEs: Trivy]
-    
-    D --> J{Pass Security Standards?}
-    E --> J
-    F --> J
-    G --> J
-    H --> J
-    I --> J
-    
-    J -->|Pass| K[Approve Build / Merge]
-    J -->|Fail| L[Block Pipeline & Alert Developer]
-
-
-
-### 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
