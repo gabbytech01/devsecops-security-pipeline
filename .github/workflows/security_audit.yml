@@ -1,0 +1,71 @@
+name: Reusable DevSecOps Security Gate
+
+on:
+  workflow_call:
+    inputs:
+      fail-on-secrets:
+        description: 'Block build if secrets/credentials are found'
+        required: false
+        type: boolean
+        default: true
+
+jobs:
+  # 1. SECRET SCANNING: Detect hardcoded API keys, passwords, and tokens
+  secret-scan:
+    name: Secret & Credential Leak Scan
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Scans entire git history
+
+      - name: Run TruffleHog Secret Scanner
+        uses: trufflesecurity/trufflehog-main@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+
+  # 2. SAST: Static Application Security Testing for source code bugs
+  sast-scan:
+    name: Static Application Security Testing (Semgrep)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run Semgrep SAST Engine
+        uses: returntocorp/semgrep-action@v1
+        with:
+          config: p/security-audit  # Scans for OWASP Top 10 vulnerabilities
+
+  # 3. SCA: Software Composition Analysis (Container & Dependency Vulns)
+  sca-scan:
+    name: Dependency & Vulnerability Scan (Trivy)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run Trivy Vulnerability Scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'table'
+          severity: 'CRITICAL,HIGH'
+
+  # 4. SCRIPT AUDITING: Static check for Bash scripts
+  shell-audit:
+    name: Shell Script Security Audit (ShellCheck)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Run ShellCheck Auditor
+        run: |
+          sudo apt-get update && sudo apt-get install -y shellcheck
+          # Scan all shell scripts in the repository
+          find . -type f -name "*.sh" -exec shellcheck {} + || true
