@@ -67,12 +67,6 @@ graph TD
 
 
 
-### 📄 License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-
-
 
 ## 🛠️ Integration Guide (How to Use)
 
@@ -88,6 +82,8 @@ To implement these security gates in your own projects, create a workflow file i
 | **`container_scan.yml`** | `image-name` *(Required)* | Scans built Docker images (e.g., `'my-app:latest'`). |
 
 ```yaml
+---
+
 name: DevSecOps Gate Check
 
 on:
@@ -112,8 +108,6 @@ jobs:
       image-name: 'my-app:latest'
 
 
-
-
 ### Option B: Run Modular Workflows Individually
 
 If you only need specific security gates (e.g., only infrastructure auditing), call only the workflow you require:
@@ -127,3 +121,9 @@ on:
 jobs:
   iac-check:
     uses: gabbytech01/devsecops-security-pipeline/.github/workflows/iac_scan.yml@main
+
+---
+
+### 📄 License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
