@@ -1,4 +1,4 @@
-# devSecOps-Security-pipeline Engine
+# devSecOps-Security-pipeline Engine.
 
 > **A modular, plug-and-play GitHub Actions DevSecOps suite providing automated Secret Scanning, SAST, SCA, Container Vulnerability Analysis, and IaC Security Auditing.**
 
